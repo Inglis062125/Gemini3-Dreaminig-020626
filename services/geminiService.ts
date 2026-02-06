@@ -28,6 +28,7 @@ export const generateArtisticResponse = async (
   let responseSchema = undefined;
 
   switch (feature) {
+    // --- Original 5 ---
     case 'dream-summarizer':
       systemInstruction += " Task: Summarize the following document text. Output the summary as if it were a manifesto or a letter written by the painter describing the content.";
       break;
@@ -82,6 +83,61 @@ export const generateArtisticResponse = async (
     case 'smart-redaction':
       systemInstruction += " Task: Identify sensitive info (names, dates, money) in the text. Return a version where sensitive info is replaced NOT by black bars, but by artistic descriptions enclosed in brackets (e.g., [A Blue Flower], [A Melting Clock]).";
       break;
+
+    // --- New 5 WOW Features ---
+    case 'muse-whisper':
+      systemInstruction += " Task: You are a creative muse. Based on the user's input, generate 3 innovative, unconventional, and artistic business ideas or creative concepts.";
+      break;
+
+    case 'strategic-oracle':
+      systemInstruction += " Task: Perform a SWOT analysis but phrased as a prophetic revelation. Also return data for a Radar Chart (Strengths, Weaknesses, Opportunities, Threats) with values 0-100.";
+      responseSchema = {
+        type: Type.OBJECT,
+        properties: {
+          analysis: { type: Type.STRING },
+          data: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                name: { type: Type.STRING, description: "Category (Strengths, etc)" },
+                value: { type: Type.NUMBER, description: "Magnitude 0-100" },
+                fullMark: { type: Type.NUMBER, description: "Always 100" }
+              }
+            }
+          }
+        }
+      };
+      break;
+
+    case 'tone-alchemist':
+      systemInstruction += " Task: Rewrite the input text in 3 distinct tones: 1) Diplomatic/Courtly, 2) Aggressive/Passionate, 3) Abstract/Poetic. Label them clearly.";
+      break;
+
+    case 'ethical-mirror':
+      systemInstruction += " Task: Analyze the text for bias, inclusivity, and ethical risks. Return a critique and a 'Risk Level' score (0-100) for a gauge chart.";
+      responseSchema = {
+        type: Type.OBJECT,
+        properties: {
+          analysis: { type: Type.STRING },
+          data: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                name: { type: Type.STRING, description: "Risk Category" },
+                value: { type: Type.NUMBER, description: "Risk Score 0-100" },
+                fill: { type: Type.STRING, description: "Color hex code suggestions" }
+              }
+            }
+          }
+        }
+      };
+      break;
+
+    case 'time-capsule':
+      systemInstruction += " Task: Re-contextualize the modern text as if it were written during the painter's active years. Use appropriate technology terms (e.g., replace 'email' with 'telegram' or 'letter', 'server' with 'archive').";
+      break;
   }
 
   try {
@@ -103,8 +159,12 @@ export const generateArtisticResponse = async (
     const resultText = response.text || "No response generated.";
 
     if (responseSchema) {
-        const parsed = JSON.parse(resultText);
-        return { text: parsed.analysis || "Data generated successfully.", data: parsed.data };
+        try {
+          const parsed = JSON.parse(resultText);
+          return { text: parsed.analysis || "Data generated successfully.", data: parsed.data };
+        } catch (e) {
+          return { text: resultText }; // Fallback if JSON parse fails
+        }
     }
 
     return { text: resultText };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { PainterStyle, Language } from '../types';
 import { TRANSLATIONS } from '../constants';
-import { LayoutDashboard, Settings, Layers, Menu, Moon, Sun, Globe } from 'lucide-react';
+import { LayoutDashboard, Settings, Layers, Moon, Sun, Globe } from 'lucide-react';
 import JackpotSelector from './JackpotSelector';
 
 interface LayoutProps {
@@ -12,10 +12,11 @@ interface LayoutProps {
   onLangChange: (lang: Language) => void;
   theme: 'light' | 'dark';
   onThemeChange: (theme: 'light' | 'dark') => void;
+  onOpenSettings: () => void;
 }
 
 const Layout: React.FC<LayoutProps> = ({ 
-  children, currentStyle, onStyleChange, lang, onLangChange, theme, onThemeChange 
+  children, currentStyle, onStyleChange, lang, onLangChange, theme, onThemeChange, onOpenSettings
 }) => {
   const t = TRANSLATIONS[lang];
 
@@ -42,7 +43,9 @@ const Layout: React.FC<LayoutProps> = ({
         <nav className="flex-1 px-4 py-4 space-y-2">
           <NavItem icon={<LayoutDashboard size={20} />} label={t.dashboard} active color={currentStyle.palette[1]} />
           <NavItem icon={<Layers size={20} />} label={t.features} color={currentStyle.palette[1]} />
-          <NavItem icon={<Settings size={20} />} label={t.settings} color={currentStyle.palette[1]} />
+          <div onClick={onOpenSettings}>
+             <NavItem icon={<Settings size={20} />} label={t.settings} color={currentStyle.palette[1]} />
+          </div>
         </nav>
 
         {/* Bottom Actions */}

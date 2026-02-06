@@ -20,11 +20,25 @@ export type AIFeatureType =
   | 'sentiment-symphony' 
   | 'predictive-sculpture' 
   | 'polyglot-synthesis' 
-  | 'smart-redaction';
+  | 'smart-redaction'
+  | 'muse-whisper'      // New: Creative Ideation
+  | 'strategic-oracle'  // New: SWOT Analysis
+  | 'tone-alchemist'    // New: Style Rewrite
+  | 'ethical-mirror'    // New: Bias Check
+  | 'time-capsule';     // New: Historical Context
 
 export interface ChartDataPoint {
   name: string;
   value: number;
   prediction?: number;
   sentiment?: number;
+  fullMark?: number; // For Radar
+  fill?: string;
+}
+
+export interface AppSettings {
+  creativityLevel: number; // 0-100
+  animationEnabled: boolean;
+  soundEnabled: boolean;
+  dataDensity: 'low' | 'high';
 }
